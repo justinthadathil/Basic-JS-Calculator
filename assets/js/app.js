@@ -1,11 +1,30 @@
+const userInput = document.getElementById('input-number');
+const addBtn = document.getElementById('btn-add');
+const subtractBtn = document.getElementById('btn-subtract');
+const multiplyBtn = document.getElementById('btn-multiply');
+const divideBtn = document.getElementById('btn-divide');
+
+const currentResultOutput = document.getElementById('current-result');
+const currentCalculationOutput = document.getElementById('current-calculation');
+
+addBtn.addEventListener('click', add);
+subtractBtn.addEventListener('click', sub);
+multiplyBtn.addEventListener('click', multiply);
+divideBtn.addEventListener('click', divide);
+
+
 const defaultResult = 0;
 let currentResult = defaultResult;
 let logEnteries = [];
 
-
 function createAndWriteOutput(operator, resultBeforeCal, calNumber) {
     const calDescription = `${resultBeforeCal} ${operator} ${calNumber}`;
     outputResult(currentResult, calDescription);
+}
+
+function outputResult(result, text) {
+    currentResultOutput.textContent = result;
+    currentCalculationOutput.textContent = text;
 }
 
 function operationLog(operationIdentifier, preNum, userNum, totalNum){
@@ -17,44 +36,58 @@ function operationLog(operationIdentifier, preNum, userNum, totalNum){
     };
     logEnteries.push(logEntry);
     console.log(logEntry);
+
+    var holder = document.getElementById("demo");
+    holder.innerHTML = " ";
+	for (var i=0;i<logEnteries.length;i++){	
+        holder.innerHTML += "<p>"+logEnteries[i].operation+","+logEnteries[i].previousNumber+","+logEnteries[i].number+","+logEnteries[i].total+"</p>"; 		
+	}
+}
+
+function calculateResult(calculationType){
+    const initalResult = currentResult;
+    const getUserInput = parseInt(userInput.value);
+
+    if(!getUserInput){
+        return;
+    }
+
+    let operator;
+    if(calculationType === "ADD"){
+        currentResult += getUserInput;
+        operator = '+';
+    }else if (calculationType === "SUB") {
+        currentResult -= getUserInput;
+        operator = '-';
+    } else if (calculationType === "MUL") {
+        currentResult *= getUserInput;
+        operator = '*';
+    } else if(calculationType === "DIV") {
+        currentResult /= getUserInput;
+        operator = '/';
+    }
+
+    createAndWriteOutput(operator, initalResult, getUserInput);
+    operationLog(calculationType, initalResult, getUserInput ,currentResult);
 }
 
 function add() {
-    const initalResult = currentResult;
-    const getUserInput = parseInt(userInput.value);
-    currentResult += getUserInput;
-    createAndWriteOutput('+', initalResult, getUserInput);
-    operationLog('ADD', initalResult, getUserInput ,currentResult);
+    calculateResult('ADD');
 }
 
 function sub(){
-    const initalResult = currentResult;
-    const getUserInput = parseInt(userInput.value);
-    currentResult -= getUserInput;
-    createAndWriteOutput('-', initalResult, getUserInput);
-    operationLog('SUB', initalResult, getUserInput ,currentResult);
+    calculateResult('SUB');
 }
 
 function multiply(){
-    const initalResult = currentResult;
-    const getUserInput = parseInt(userInput.value);
-    currentResult *= getUserInput;
-    createAndWriteOutput('*', initalResult, getUserInput);
-    operationLog('MUL', initalResult, getUserInput ,currentResult);
+    calculateResult('MUL');
 }
 
 function divide(){
-    const initalResult = currentResult;
-    const getUserInput = parseInt(userInput.value);
-    currentResult /= getUserInput;
-    createAndWriteOutput('/', initalResult, getUserInput);
-    operationLog('DIV', initalResult, getUserInput ,currentResult);
+    calculateResult('DIV');
 }
 
-addBtn.addEventListener('click', add);
-subtractBtn.addEventListener('click', sub);
-multiplyBtn.addEventListener('click', multiply);
-divideBtn.addEventListener('click', divide);
+
 
 
 
